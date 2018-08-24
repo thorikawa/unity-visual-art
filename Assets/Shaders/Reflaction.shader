@@ -1,4 +1,6 @@
-﻿// Per pixel bumped refraction.
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Per pixel bumped refraction.
 // Uses a normal map to distort the image behind, and
 // an additional texture to tint the color.
 
@@ -50,7 +52,7 @@ struct v2f {
 v2f vert (appdata_t v)
 {
 	v2f o;
-	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+	o.vertex = UnityObjectToClipPos(v.vertex);
 	// maybe change scale (-w, w) to (0, w)??
 	#if UNITY_UV_STARTS_AT_TOP
 	float scale = -1.0;

@@ -46,7 +46,7 @@ public class HiResRecorder : MonoBehaviour {
 			}
 		}
 		if (isCapturing){
-			Application.CaptureScreenshot(path+imgIndex.ToString("D8")+".png");
+			ScreenCapture.CaptureScreenshot(path+imgIndex.ToString("D8")+".png");
 			imgIndex+=1;
 			Time.timeScale = 1.0f/localDeltaTime/frameRate;
 			//Time.fixedDeltaTime = fixedDeltaTimeCache / Time.timeScale;

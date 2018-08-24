@@ -1,4 +1,6 @@
-﻿Shader "Custom/Circle" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/Circle" {
     Properties {
     	_MainTex ("Texture", 2D) = "white" { }
     }
@@ -27,7 +29,7 @@
 
             v2f vert(appdata_base v) {
                 v2f o;
-			    o.position = mul (UNITY_MATRIX_MVP, v.vertex);
+			    o.position = UnityObjectToClipPos (v.vertex);
 			    o.uv = TRANSFORM_TEX (v.texcoord, _MainTex);
 			    return o;
             }
