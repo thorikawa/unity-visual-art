@@ -1,50 +1,51 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
 
-#define BLOCK_SIZE 64 // should be group_sie * thread_size
+#define BLOCK_SIZE 128 // should be group_sie * thread_size
 #define MAX_ITER 24
-#define COEFF 8
+#define COEFF 8.0
 #define LEN_THRESHOLD 20
+#define PI 3.141592653589793
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 // RWTexture2D<float4> Result;
 // RWTexture3D<half4> Result;
-RWStructuredBuffer<uint> countMap;
+RWStructuredBuffer<uint> _CountMap;
+float _Time;
 
-float PI = 3.141592653589793;
-
-float atan2(in float y, in float x)
-{
-    return x == 0.0 ? sign(y)*PI/2 : atan(y, x);
+float3 triplexPow (float3 p, float n) {
+    float r = length(p);
+    if (r == 0.0) {
+        return false;
+    }
+    float theta = n * atan2(p.y, p.x);
+    float phi = n * asin(p.z / r);
+    float sintheta = sin(theta);
+    float cosphi = cos(phi);
+    float sinphi = sin(phi);
+    return pow(r, n) * float3(cos(theta) * cosphi, sintheta * cosphi, -sinphi);
 }
 
 [numthreads(8, 8, 8)]
 void CSMain (uint3 id : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID)
 {
 	// Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
-    uint index = BLOCK_SIZE * BLOCK_SIZE * id.x + BLOCK_SIZE * id.y + z;
-    countMap[index] = 0;
-    half3 c = half3((float)id.x / BLOCK_SIZE, (float)id.y / BLOCK_SIZE, (float)id.z / BLOCK_SIZE);
-    half3 p = half3(0, 0, 0);
+    uint index = BLOCK_SIZE * BLOCK_SIZE * id.x + BLOCK_SIZE * id.y + id.z;
+    _CountMap[index] = 0;
+    float3 c = float3(
+        ((float)id.x / (float)BLOCK_SIZE) * 2.0 - 1.0,
+        ((float)id.y / (float)BLOCK_SIZE) * 2.0 - 1.0,
+        ((float)id.z / (float)BLOCK_SIZE) * 2.0 - 1.0
+    );
+    // c = c * 1.5;
+    float3 p = float3(0, 0, 0);
+    float coeff = 2.0 + _Time / 10.0;
     for (int i = 0; i<MAX_ITER; i++) {
-        p = triplexPow(p, COEFF) + c
+        p = triplexPow(p, coeff) + c;
         if (length(p) > LEN_THRESHOLD) {
-            countMap[index] = (i + 1);
+            _CountMap[index] = (i + 1);
             break;
         }
     }
-}
-
-half3 triplexPow (half3 p, float n) {
-    float r = length(p)
-    if (r == 0.0) {
-        return false;
-    }
-    theta = n * atan2(p.y, p.x)
-    phi = n * asin(p.z / r)
-    sintheta = sin(theta)
-    cosphi = cos(phi)
-    sinphi = sin(phi)
-    return pow(r, n) * half3(cos(theta) * cosphi, sintheta * cosphi, -sinphi)
 }
