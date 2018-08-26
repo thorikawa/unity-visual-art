@@ -37,10 +37,11 @@
 
             uint count = _CountMap[unity_InstanceID];
             // !!!!Depends on the size
-            uint x = (float)((unity_InstanceID >> 14) & 0x7f);
-            uint y = (float)((unity_InstanceID >>  7) & 0x7f);
-            uint z = (float)((unity_InstanceID >>  0) & 0x7f);
-            float3 pos = float3(x - 64.0, y - 64.0, z - 64.0);
+            uint x = (float)((unity_InstanceID >> 16) & 0xff);
+            uint y = (float)((unity_InstanceID >>  8) & 0xff);
+            uint z = (float)((unity_InstanceID >>  0) & 0xff);
+            float3 pos = float3(x - 128.0, y - 128.0, z - 128.0);
+            pos = pos / 2.0f;
             float3 scl = _ObjectScale;
 
             // オブジェクト座標からワールド座標に変換する行列を定義

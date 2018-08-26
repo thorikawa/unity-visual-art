@@ -8,7 +8,7 @@ public class Mandelbulb : MonoBehaviour
 {
     public ComputeShader mandelbulbCS;
     private ComputeBuffer buffer;
-    private static readonly int GROUP_SIZE = 16;
+    private static readonly int GROUP_SIZE = 32;
     private static readonly int THREAD_SIZE = 8;
     private static readonly int SIZE = GROUP_SIZE * THREAD_SIZE;
     public Mesh mesh;

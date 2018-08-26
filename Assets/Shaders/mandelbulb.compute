@@ -1,7 +1,7 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
 
-#define BLOCK_SIZE 128 // should be group_sie * thread_size
+#define BLOCK_SIZE 256 // should be group_sie * thread_size
 #define MAX_ITER 24
 #define COEFF 8.0
 #define LEN_THRESHOLD 20
